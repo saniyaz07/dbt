@@ -1,21 +1,51 @@
-
 version: 2
 
 models:
-    - name: my_first_dbt_model
-      description: "A starter dbt model"
-      columns:
-          - name: id
-            description: "The primary key for this table"
-            tests:
-                - unique
-                - not_null
+  - name: stg_customers
+    description: "Cleaned customer data"
+    columns:
+      - name: customer_id
+        data_tests:
+          - unique
+          - not_null
 
-    - name: my_second_dbt_model
-      description: "A starter dbt model"
-      columns:
-          - name: id
-            description: "The primary key for this table"
-            tests:
-                - unique
-                - not_null
+  - name: stg_orders
+    description: "Cleaned order data"
+    columns:
+      - name: order_id
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        data_tests:
+          - not_null
+
+  - name: stg_products
+    description: "Cleaned product data"
+    columns:
+      - name: product_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: fct_sales
+    description: "Sales fact table combining order and product information to calculate revenue."
+    columns:
+      - name: order_id
+        description: "Identifier of the order."
+      - name: quantity
+        description: "Number of units purchased."
+      - name: revenue
+        description: "Line revenue in currency units, calculated from quantity and product price."
+
+  - name: sales_summary
+    description: "Category-level sales metrics for completed orders."
+    columns:
+      - name: category
+        description: "Product category."
+      - name: total_orders
+        description: "Count of distinct completed orders containing products in the category."
+      - name: total_units_sold
+        description: "Total units sold for the category."
+      - name: total_revenue
+        description: "Total revenue from completed orders in the category."
